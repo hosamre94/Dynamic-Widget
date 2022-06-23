@@ -13,7 +13,7 @@ public class AdminScriptBundle: IAdminScriptBundle
         return Task.FromResult(true);
     }
 
-    public string Url => "/Apps/DynamicWidget/assets/dynamic-widget-admin.js";
+    public string Url => "/Apps/DynamicWidgets/assets/dynamic-widget-admin.js";
 
     public IEnumerable<string> VendorFiles
     {
