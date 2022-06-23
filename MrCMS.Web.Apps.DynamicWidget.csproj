@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/Apps/DynamicWidget/</StaticWebAssetBasePath>
+		<StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/Apps/DynamicWidgets/</StaticWebAssetBasePath>
 	</PropertyGroup>
 
 	<ItemGroup>

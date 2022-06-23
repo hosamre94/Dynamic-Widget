@@ -1,0 +1,11 @@
+﻿@using MrCMS.Services
+@using MrCMS.Web.Apps.DynamicWidget.Widgets
+@inject IWidgetUIService WidgetUIService
+@model MrCMS.Website.WidgetData
+@{
+    var widget = await WidgetUIService.GetWidgetAsync<DynamicWidget>(Model.Id);
+}
+
+@{
+    await Html.RenderPartialAsync("_DynamicWidget", widget);
+}
