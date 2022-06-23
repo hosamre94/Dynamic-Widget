@@ -112,3 +112,5 @@ appsettings.Development.json
 
 src/MrCMS.Web/connectionstrings.json
 
+
+wwwroot/assets/
