@@ -1,7 +1,3 @@
-import "./jquery-global.js";
-import $, {ajax} from "jquery";
-import 'jquery-serializejson'
-
 let _isFirstTime = true;
 let _cachedRows = {};
 

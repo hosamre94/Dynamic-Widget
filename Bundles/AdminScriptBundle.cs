@@ -19,7 +19,7 @@ public class AdminScriptBundle: IAdminScriptBundle
     {
         get
         {
-            yield break;
+            yield return "/Apps/DynamicWidgets/Content/libs/jquery.serializejson.js";
         }
     }
 }
