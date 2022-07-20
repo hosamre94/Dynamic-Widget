@@ -94,7 +94,7 @@ public class DynamicWidgetRender : IDynamicWidgetRender
             if (string.Equals(typeName, "array", StringComparison.OrdinalIgnoreCase))
                 node.Children = GetChildren(matchCollection, ref i, typeName);
 
-            if (!tree.Any(x => x.Name == nameValueTuple.Value))
+            if (tree.All(x => x.Name != nameValueTuple.Value))
                 tree.Add(node);
         }
 
@@ -126,7 +126,7 @@ public class DynamicWidgetRender : IDynamicWidgetRender
             if (string.Equals(typeName, "array", StringComparison.OrdinalIgnoreCase))
                 node.Children = GetChildren(matchCollection, ref i, nameValueTuple.Value);
 
-            if (!children.Any(x => x.Name == nameValueTuple.Value))
+            if (children.All(x => x.Name != nameValueTuple.Value))
                 children.Add(node);
         }
 
@@ -331,14 +331,11 @@ public class DynamicWidgetRender : IDynamicWidgetRender
 
             foreach (var node in nodes)
             {
-                var typeName = node.TypeName;
-                var name = node.Name;
-
                 var td = new TagBuilder("td");
 
-                var _prefix = $"{prefix}[]";
+                var prefixName = $"{prefix}[]";
 
-                var render = await RenderProperties(helper, node, nodeProps, _prefix);
+                var render = await RenderProperties(helper, node, nodeProps, prefixName);
                 if (render != null)
                     td.InnerHtml.AppendHtml(render);
 

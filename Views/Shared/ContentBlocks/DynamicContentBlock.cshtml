@@ -1,0 +1,7 @@
+﻿@using MrCMS.Web.Apps.DynamicWidget.Helper
+@model MrCMS.Web.Apps.DynamicWidget.Entities.ContentBlocks.DynamicContentBlock
+
+@if (Model.Settings != null)
+{
+    @await Html.RenderDynamicContent(x => x.Settings.Text, x => x.Settings.Properties)
+}

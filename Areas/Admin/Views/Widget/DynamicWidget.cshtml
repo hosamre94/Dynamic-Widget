@@ -5,14 +5,14 @@
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-proprties-tab" data-toggle="tab" href="#nav-proprties" role="tab" aria-controls="nav-proprties" aria-selected="true">Proprties</a>
+        <a class="nav-item nav-link active" id="nav-properties-tab" data-toggle="tab" href="#nav-properties" role="tab" aria-controls="nav-properties" aria-selected="true">Properties</a>
         <a class="nav-item nav-link" id="nav-source-tab" data-toggle="tab" href="#nav-source" role="tab" aria-controls="nav-source" aria-selected="false">Source</a>
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-proprties" role="tabpanel" aria-labelledby="nav-proprties-tab">
+    <div class="tab-pane fade show active" id="nav-properties" role="tabpanel" aria-labelledby="nav-properties-tab">
         <div class="mt-3">
-            @await Html.RenderAdminProprties(x => x.Text, x => x.Properties)
+            @await Html.RenderAdminProperties(x => x.Text, x => x.Properties)
         </div>
     </div>
     <div class="tab-pane fade" id="nav-source" role="tabpanel" aria-labelledby="nav-source-tab">

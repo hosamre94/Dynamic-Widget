@@ -77,9 +77,12 @@ function refreshUI() {
 }
 
 function dragAndDrop() {
-    document.querySelector("#drag").ondragstart = function (e) {
-        const dataTransfer = e.dataTransfer;
-        dataTransfer.effectAllowed
-        dataTransfer.setData("Text", e.target.dataset.text);
+    if (document.querySelectorAll("#drag").length)
+    {
+        document.querySelector("#drag").ondragstart = function (e) {
+            const dataTransfer = e.dataTransfer;
+            dataTransfer.effectAllowed
+            dataTransfer.setData("Text", e.target.dataset.text);
+        }   
     }
 }
