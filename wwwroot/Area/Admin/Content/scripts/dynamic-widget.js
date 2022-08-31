@@ -1,3 +1,5 @@
+import {setupWebpageUrlSelector} from "./webpage-url-selector";
+
 let _isFirstTime = true;
 let _cachedRows = {};
 
@@ -50,6 +52,10 @@ function refreshUI() {
             const _clone = _cachedRows[$(this).data('row-id')].clone();
             const _size = $(this).closest('table').children('tbody').children('tr').length;
 
+            _clone.find('[data-dynamic-input]').each(function (){
+                $(this).attr('id', $(this).attr('id') + '_' + _size )
+            });
+
             //find a better way to integrate the custom inputs
             const _uniqueInputs = _clone.find('[data-unique-key]');
             if (_uniqueInputs.length > 0) {
@@ -62,6 +68,7 @@ function refreshUI() {
             _clone.find('[data-type=media-selector], [class=media-selector]').mediaSelector();
             _clone.find('td:first').html(_size);
             $(this).closest('table').append(_clone);
+            setupWebpageUrlSelector();
             refreshUI();
         })
     })

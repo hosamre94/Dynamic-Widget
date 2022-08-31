@@ -11,24 +11,25 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 
 public class PageUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
-    private readonly ISession _session;
-    private readonly IGetCurrentPage _getCurrentPage;
-    private readonly IGetCurrentUserCultureInfo _getCurrentCultureInfo;
+    private readonly IWebpageUIService _webpageUiService;
 
 
-    public PageUrlDynamicWidgetParser(ISession session, IGetCurrentPage getCurrentPage,
-        IGetCurrentUserCultureInfo getCurrentCultureInfo)
+    public PageUrlDynamicWidgetParser(IWebpageUIService webpageUiService)
     {
-        _session = session;
-        _getCurrentPage = getCurrentPage;
-        _getCurrentCultureInfo = getCurrentCultureInfo;
+        _webpageUiService = webpageUiService;
     }
 
     public string Name => "pageUrl";
 
-    public Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
+    public async Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        return Task.FromResult(existingValue) ;
+        if (int.TryParse(existingValue, out var pageId))
+        {
+            var page  = await _webpageUiService.GetPage<Webpage>(pageId);
+            return page?.UrlSegment;
+        }
+        
+        return existingValue;
     }
 }

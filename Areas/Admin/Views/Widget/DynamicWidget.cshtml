@@ -2,11 +2,10 @@
 @using MrCMS.Services.Resources
 @using MrCMS.Web.Apps.DynamicWidget.Helper
 @model MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models.Widgets.DynamicWidgetModel
-
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-properties-tab" data-toggle="tab" href="#nav-properties" role="tab" aria-controls="nav-properties" aria-selected="true">Properties</a>
-        <a class="nav-item nav-link" id="nav-source-tab" data-toggle="tab" href="#nav-source" role="tab" aria-controls="nav-source" aria-selected="false">Source</a>
+        <a class="nav-item nav-link active" id="nav-properties-tab" data-bs-toggle="tab" href="#nav-properties" role="tab" aria-controls="nav-properties" aria-selected="true">Properties</a>
+        <a class="nav-item nav-link" id="nav-source-tab" data-bs-toggle="tab" href="#nav-source" role="tab" aria-controls="nav-source" aria-selected="false">Source</a>
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -40,6 +39,9 @@
             </li>
             <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[pageUrl name="inputname"]'>
                 <i class="fa fa-id-badge"></i> Page Url
+            </li>
+            <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[pageAnchorTag name="inputname" class=""]'>
+                <i class="fa fa-id-badge"></i> Page AnchorTag
             </li>
         </ul>
         <div class="form-group mt-3">

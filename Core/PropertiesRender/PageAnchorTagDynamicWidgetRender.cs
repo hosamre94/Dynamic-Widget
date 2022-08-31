@@ -10,19 +10,20 @@ using NHibernate.Linq;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Core;
 
-public class PageUrlDynamicWidgetRender : IDynamicWidgetPropertyRender
+public class PageAnchorTagDynamicWidgetRender : IDynamicWidgetPropertyRender
 {
     private readonly ISession _session;
     private readonly IWebpageUIService _webpageUiService;
 
 
-    public PageUrlDynamicWidgetRender(ISession session,IWebpageUIService webpageUiService)
+    public PageAnchorTagDynamicWidgetRender(ISession session,
+        IWebpageUIService webpageUiService)
     {
         _session = session;
         _webpageUiService = webpageUiService;
     }
 
-    public string Name => "pageUrl";
+    public string Name => "pageAnchorTag";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
