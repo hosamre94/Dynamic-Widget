@@ -16,13 +16,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="wwwroot\Area\Admin\lib" />
 		<Folder Include="wwwroot\assets\" />
 		<Folder Include="wwwroot\Content" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <AdditionalFiles Include="Views\Shared\Widgets\DynamicWidget.cshtml" />
-	</ItemGroup>
+	
 
 	<!--
           1. Install npm packages

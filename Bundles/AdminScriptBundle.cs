@@ -20,6 +20,7 @@ public class AdminScriptBundle: IAdminScriptBundle
         get
         {
             yield return "/Apps/DynamicWidgets/Content/libs/jquery.serializejson.js";
+            yield return "/Apps/DynamicWidgets/Area/Admin/lib/aceeditor/js/ace.js";
         }
     }
 }

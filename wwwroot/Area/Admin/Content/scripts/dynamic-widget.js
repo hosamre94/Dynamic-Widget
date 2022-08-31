@@ -41,7 +41,7 @@ function refreshUI() {
             _media.removeClass('media-selector-initialized');
             _media.attr('id', 'm_temp')
             _media.closest('.form-group').html(_media);
-            _row.find('input').val('');
+            _row.find('input,select').val('');
             _cachedRows[_rowId] = _row;
         }
 
