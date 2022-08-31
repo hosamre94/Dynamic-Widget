@@ -26,9 +26,9 @@ public class PageUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
 
     public string Name => "pageUrl";
 
-    public async Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
+    public Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        return existingValue;
+        return Task.FromResult(existingValue) ;
     }
 }

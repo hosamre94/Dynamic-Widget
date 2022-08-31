@@ -12,15 +12,20 @@ public class TextAreaDynamicWidgetRender : IDynamicWidgetPropertyRender
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        var tagBuilder = new TagBuilder("textarea");
-        tagBuilder.Attributes["type"] = "text";
-        tagBuilder.Attributes["name"] = name;
+        var tagBuilder = new TagBuilder("textarea")
+        {
+            TagRenderMode = TagRenderMode.Normal,
+            Attributes =
+            {
+                ["type"] = "text",
+                ["name"] = name,
+                ["data-dynamic-input"] = null
+            }
+        };
         tagBuilder.InnerHtml.Append(existingValue);
-        tagBuilder.Attributes["data-dynamic-input"] = null;
 
-        tagBuilder.TagRenderMode = TagRenderMode.Normal;
-        var elemntId = TagBuilder.CreateSanitizedId(name, "-");
-        tagBuilder.Attributes["id"] = elemntId;
+        var elementId = TagBuilder.CreateSanitizedId(name, "-");
+        tagBuilder.Attributes["id"] = elementId;
 
         tagBuilder.AddCssClass("form-control");
         return await Task.FromResult(tagBuilder);

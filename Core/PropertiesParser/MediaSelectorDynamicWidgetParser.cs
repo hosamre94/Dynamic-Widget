@@ -21,14 +21,18 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
         if (attributes != null)
             foreach (var attr in attributes)
             {
-                if (attr.Key.Equals("width"))
-                    int.TryParse(attr.Value, out width);
-
-                if (attr.Key.Equals("height"))
-                    int.TryParse(attr.Value, out height);
-
-                if (attr.Key.Equals("class"))
-                    classes = attr.Value;
+                switch (attr.Key)
+                {
+                    case "width":
+                        int.TryParse(attr.Value, out width);
+                        break;
+                    case "height":
+                        int.TryParse(attr.Value, out height);
+                        break;
+                    case "class":
+                        classes = attr.Value;
+                        break;
+                }
             }
 
         var size = default(Size);
@@ -38,12 +42,10 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
         if (height > 0)
             size.Height = height;
 
-        using (var writer = new StringWriter())
-        {
-            (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }))
-                .WriteTo(writer, HtmlEncoder.Default);
+        await using var writer = new StringWriter();
+        (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }))
+            .WriteTo(writer, HtmlEncoder.Default);
 
-            return writer.ToString();
-        }
+        return writer.ToString();
     }
 }

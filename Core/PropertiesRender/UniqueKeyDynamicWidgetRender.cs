@@ -17,22 +17,26 @@ public class UniqueKeyDynamicWidgetRender : IDynamicWidgetPropertyRender
 
         IHtmlContentBuilder htmlContent = new HtmlContentBuilder();
 
-        var tagBuilder = new TagBuilder("input");
-        tagBuilder.Attributes["type"] = "hidden";
-        tagBuilder.Attributes["name"] = name;
-        tagBuilder.Attributes["value"] = id;
+        var tagBuilder = new TagBuilder("input")
+        {
+            Attributes =
+            {
+                ["type"] = "hidden",
+                ["name"] = name,
+                ["value"] = id,
+                ["data-unique-key"] = null,
+                ["data-dynamic-input"] = null
+            }
+        };
 
-        tagBuilder.Attributes["data-unique-key"] = null;
-        tagBuilder.Attributes["data-dynamic-input"] = null;
-
-        var elemntId = TagBuilder.CreateSanitizedId(name, "-");
-        tagBuilder.Attributes["id"] = elemntId;
+        var elementId = TagBuilder.CreateSanitizedId(name, "-");
+        tagBuilder.Attributes["id"] = elementId;
 
         htmlContent.AppendHtml(tagBuilder);
 
         var label = new TagBuilder("span");
         label.InnerHtml.Append(id);
-        label.AddCssClass("font-weight-bold");
+        label.AddCssClass("fw-bold");
 
         htmlContent.AppendHtml(label);
 

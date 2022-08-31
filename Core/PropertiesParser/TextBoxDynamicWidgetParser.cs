@@ -12,9 +12,9 @@ public class TextBoxDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
     public string Name => "text";
 
-    public async Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
+    public Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        return await Task.FromResult(existingValue);
+        return Task.FromResult(existingValue);
     }
 }

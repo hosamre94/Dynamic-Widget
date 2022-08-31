@@ -9,9 +9,9 @@ public class TextAreaDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
     public string Name => "textarea";
 
-    public async Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
+    public Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        return await Task.FromResult(existingValue);
+        return Task.FromResult(existingValue);
     }
 }

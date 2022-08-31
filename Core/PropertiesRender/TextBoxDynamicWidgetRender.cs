@@ -12,13 +12,17 @@ public class TextBoxDynamicWidgetRender : IDynamicWidgetPropertyRender
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        var tagBuilder = new TagBuilder("input");
-        tagBuilder.Attributes["id"] = TagBuilder.CreateSanitizedId(name, "-");
-        tagBuilder.Attributes["name"] = name;
-        tagBuilder.Attributes["type"] = "text";
-        tagBuilder.Attributes["value"] = existingValue;
-        tagBuilder.Attributes["data-dynamic-input"] = null;
-        ;
+        var tagBuilder = new TagBuilder("input")
+        {
+            Attributes =
+            {
+                ["id"] = TagBuilder.CreateSanitizedId(name, "-"),
+                ["name"] = name,
+                ["type"] = "text",
+                ["value"] = existingValue,
+                ["data-dynamic-input"] = null
+            }
+        };
 
         tagBuilder.AddCssClass("form-control");
 
