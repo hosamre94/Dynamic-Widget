@@ -15,9 +15,6 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class PageAnchorTagDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
     private readonly IWebpageUIService _webpageUiService;
-    private readonly ISession _session;
-    private readonly IGetCurrentPage _getCurrentPage;
-    private readonly IGetCurrentUserCultureInfo _getCurrentCultureInfo;
 
 
     public PageAnchorTagDynamicWidgetParser(IWebpageUIService webpageUiService)
@@ -35,7 +32,7 @@ public class PageAnchorTagDynamicWidgetParser : IDynamicWidgetPropertyParser
             var page  = await _webpageUiService.GetPage<Webpage>(pageId);
             
             var anchorTag = new TagBuilder("a");
-            anchorTag.Attributes.Add("href", page?.UrlSegment);
+            anchorTag.Attributes.Add("href",$"/{page?.UrlSegment}");
             anchorTag.InnerHtml.Append(page?.Name ?? string.Empty);
 
             if (attributes != null)

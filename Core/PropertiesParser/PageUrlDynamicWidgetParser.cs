@@ -27,7 +27,7 @@ public class PageUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
         if (int.TryParse(existingValue, out var pageId))
         {
             var page  = await _webpageUiService.GetPage<Webpage>(pageId);
-            return page?.UrlSegment;
+            return $"/{page?.UrlSegment}";
         }
         
         return existingValue;

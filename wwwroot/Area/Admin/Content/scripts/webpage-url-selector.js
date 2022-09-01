@@ -3,7 +3,7 @@
         placeholder: "Search for a page",
         minimumInputLength: 1,
         ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-            url: "/Admin/WebpageUrlSelector/WebpageSearch",
+            url: "/Admin/Webpage/Select2Search",
             data: function (params) {
                 return {
                     search: params.term,
