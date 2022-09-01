@@ -3,12 +3,8 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MrCMS.Entities.Documents.Web;
-using MrCMS.Helpers;
 using MrCMS.Services;
-using MrCMS.Services.Resources;
 using MrCMS.Web.Apps.DynamicWidget.Models;
-using NHibernate;
-using NHibernate.Linq;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Core;
 

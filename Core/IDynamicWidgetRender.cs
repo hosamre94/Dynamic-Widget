@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using MrCMS.Web.Apps.DynamicWidget.Models;
 
