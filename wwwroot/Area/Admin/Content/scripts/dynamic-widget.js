@@ -1,18 +1,18 @@
 import {setupWebpageUrlSelector} from "./webpage-url-selector";
 
-let _isFirstTime = true;
+let _isFirstTime;
 let _cachedRows = {};
 
 export function initiateDynamicWidget(){
+    _isFirstTime = true;
     formSubmit();
     refreshUI();
     dragAndDrop();
 }
 
 function formSubmit() {
-    $('form').on('submit', function () {
-
-        var $form = $('<form>');
+    $('table.dynamic-table').closest('form').on('submit', function () {
+        let $form = $('<form>');
         $('[data-dynamic-input]').map((x, el) => {
             $('<input>').attr({
                 type: 'hidden',
@@ -23,7 +23,7 @@ function formSubmit() {
             //$(el).remove()
         })
 
-        var obj = $form.serializeJSON()
+        let obj = $form.serializeJSON()
         $('<input>').attr({
             type: 'hidden',
             name: 'Properties',
@@ -33,7 +33,7 @@ function formSubmit() {
 }
 
 function refreshUI() {
-    $(".add-row").each(function (i) {
+    $(".dynamic-table .add-row").each(function (i) {
         if (_isFirstTime) {
             const _row = $(this).closest('table').children('tbody').children('tr:nth-child(2)').clone();
             const _rowId = $(this).data('row-id');
@@ -73,7 +73,7 @@ function refreshUI() {
         })
     })
 
-    $(".delete-row").off().click(function () {
+    $(".dynamic-table .delete-row").off().click(function () {
         const didConfirm = confirm("Are you sure You want to delete");
         if (didConfirm === true) {
             $(this).closest('tr').remove();
@@ -84,9 +84,9 @@ function refreshUI() {
 }
 
 function dragAndDrop() {
-    if (document.querySelectorAll("#drag").length)
+    if (document.querySelectorAll("#dynamic-widget-drag").length)
     {
-        document.querySelector("#drag").ondragstart = function (e) {
+        document.querySelector("#dynamic-widget-drag").ondragstart = function (e) {
             const dataTransfer = e.dataTransfer;
             dataTransfer.effectAllowed
             dataTransfer.setData("Text", e.target.dataset.text);
