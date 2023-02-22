@@ -38,11 +38,14 @@ function refreshUI() {
             const _row = $(this).closest('table').children('tbody').children('tr:nth-child(2)').clone();
             const _rowId = $(this).data('row-id');
 
-            const _media = _row.find('.media-selector-initialized');
-            _media.off();
-            _media.removeClass('media-selector-initialized');
-            _media.attr('id', 'm_temp')
-            _media.closest('.form-group').html(_media);
+            _row.find('.media-selector-initialized').each(function(index){
+                let $media = $(this);
+                $media.off();
+                $media.removeClass('media-selector-initialized');
+                $media.attr('id', `m_temp_${index}`)
+                $media.closest('.form-group').html($media);
+            });
+
             _row.find('input,select').val('');
             _cachedRows[_rowId] = _row;
         }
