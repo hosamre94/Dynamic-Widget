@@ -11,7 +11,7 @@ export function initiateDynamicWidget(){
 }
 
 function formSubmit() {
-    $('table.dynamic-table').closest('form').on('submit', function () {
+    $('[data-dynamic-input]').closest('form').on('submit', function () {
         let $form = $('<form>');
         $('[data-dynamic-input]').map((x, el) => {
             $('<input>').attr({

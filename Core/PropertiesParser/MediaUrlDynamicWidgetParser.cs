@@ -8,14 +8,13 @@ using MrCMS.Web.Apps.DynamicWidget.Models;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Core;
 
-public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
+public class MediaUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
-    public string Name => "media";
+    public string Name => "mediaUrl";
 
     public async Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
-        var classes = (string)null;
         var width = 0;
         var height = 0;
         if (attributes != null)
@@ -29,9 +28,6 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
                     case "height":
                         int.TryParse(attr.Value, out height);
                         break;
-                    case "class":
-                        classes = attr.Value;
-                        break;
                 }
             }
 
@@ -42,10 +38,6 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
         if (height > 0)
             size.Height = height;
 
-        await using var writer = new StringWriter();
-        (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }))
-            .WriteTo(writer, HtmlEncoder.Default);
-
-        return writer.ToString();
+        return await helper.GetImageUrl(existingValue, size);
     }
 }

@@ -3,35 +3,7 @@
 @model UpdateDynamicContentBlockModel
 
 
-<div class="alert alert-info mt-3" role="alert">
-    <strong>(@await Html.Resource("Heads up"))</strong> @await Html.Resource("You can drag and drop the tags below into the editor.")
-</div>
-<ul class="mb-0 list-unstyled" id="dynamic-widget-drag">
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[text name="inputname"]'>
-        <i class="fa fa-file-text"></i> Text
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[textarea name="inputname"]'>
-        <i class="fa fa-file-text"></i> Textarea
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[media name="inputname" width="" height="" class=""]'>
-        <i class="fa fa-image"></i> Media Selector
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[resource name="key" default="defaultValue"]'>
-        <i class="fa fa-language"></i> Translation
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[array name="inputname"][array-end]'>
-        <i class="fa fa-th-list"></i> Array
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[uniquekey name"inputname"]'>
-        <i class="fa fa-id-badge"></i> Unique Id
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[pageUrl name="inputname" type="TextPage" culture=""]'>
-        <i class="fa fa-id-badge"></i> Page Url
-    </li>
-    <li class="btn btn-default btn-sm mr-2 mb-2" draggable="true" data-text='[pageAnchorTag name="inputname" class=""]'>
-        <i class="fa fa-id-badge"></i> Page AnchorTag
-    </li>
-</ul>
+@{ await Html.RenderPartialAsync("_DynamicWidgetDragHelper"); }
 
 <div class="form-group mt-3">
     @Html.LabelFor(m => m.Text)
