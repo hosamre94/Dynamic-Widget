@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MrCMS.Helpers;
 using MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models;
 using MrCMS.Web.Apps.DynamicWidget.Entities;
 using NHibernate;
+using NHibernate.Linq;
 using X.PagedList;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Services;
@@ -19,7 +21,7 @@ public class HtmlTemplateAdminService : IHtmlTemplateAdminService
         _session = session;
         _mapper = mapper;
     }
-    
+
     public async Task<IPagedList<HtmlTemplate>> SearchAsync(HtmlTemplateSearchModel searchModel)
     {
         var query = _session.Query<HtmlTemplate>();
@@ -39,6 +41,17 @@ public class HtmlTemplateAdminService : IHtmlTemplateAdminService
     public async Task<HtmlTemplate> GetAsync(int id)
     {
         return await _session.GetAsync<HtmlTemplate>(id);
+    }
+
+    public async Task<bool> IsUniqueName(string name, int? id)
+    {
+        return !await _session.Query<HtmlTemplate>().AnyAsync(f => f.Name.ToLower() == name.ToLower() && id != f.Id);
+    }
+
+    public async Task<UpdateHtmlTemplateModel> GetUpdateModel(int id)
+    {
+        var template = await GetAsync(id);
+        return _mapper.Map<UpdateHtmlTemplateModel>(template);
     }
 
     public async Task UpdateAsync(UpdateHtmlTemplateModel model)

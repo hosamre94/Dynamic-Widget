@@ -1,8 +1,9 @@
-﻿@model MrCMS.Web.Apps.DynamicWidget.Entities.HtmlTemplate
+﻿@model MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models.UpdateHtmlTemplateModel
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutPopup.cshtml";
 }
 <form method="post" asp-controller="HtmlTemplate" asp-action="Edit">
+    @Html.HiddenFor(f=>f.Id)
     <fieldset>
         <legend>
             Edit Html Template
@@ -18,7 +19,7 @@
             <input asp-for="Name" class="form-control"/>
             <span asp-validation-for="Name"></span>
         </div>
-        
+
         @{ await Html.RenderPartialAsync("_DynamicWidgetDragHelper"); }
 
         <div class="form-group mt-3">
