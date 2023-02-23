@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MrCMS.Entities.Documents.Web;
 using MrCMS.Services;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MrCMS.Helpers;
 using MrCMS.Web.Apps.DynamicWidget.Models;
 using NHibernate;
 using NHibernate.Linq;
@@ -27,11 +29,14 @@ public class PageAnchorTagDynamicWidgetRender : IDynamicWidgetPropertyRender
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
+        var elementId = TagBuilder.CreateSanitizedId(name, "-").GetTidyFileName();
+        elementId = $"{elementId}-{(new Random()).NextInt64(long.MinValue, long.MaxValue)}";
+
         var tagBuilder = new TagBuilder("select")
         {
             Attributes =
             {
-                ["id"] = TagBuilder.CreateSanitizedId(name, "-"),
+                ["id"] = elementId,
                 ["name"] = name,
                 ["data-webpage-url-selector"] = null,
                 ["data-dynamic-input"] = null
@@ -45,7 +50,7 @@ public class PageAnchorTagDynamicWidgetRender : IDynamicWidgetPropertyRender
             page = await _session.Query<Webpage>()
                 .FirstOrDefaultAsync(x => x.WebpageType.EndsWith(name));
         }
-        else if(int.TryParse(existingValue,out var pageId))
+        else if (int.TryParse(existingValue, out var pageId))
         {
             page = await _webpageUiService.GetPage<Webpage>(pageId);
         }
@@ -54,7 +59,7 @@ public class PageAnchorTagDynamicWidgetRender : IDynamicWidgetPropertyRender
         {
             tagBuilder.InnerHtml.AppendHtml($"<option value='{page.Id}' selected>{page.Name}</option>");
         }
-        
+
         tagBuilder.AddCssClass("form-control");
 
         return await Task.FromResult(tagBuilder);
