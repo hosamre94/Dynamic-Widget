@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using FluentNHibernate.Conventions.Inspections;
+using MrCMS.Shortcodes.Forms;
 using MrCMS.Web.Apps.DynamicWidget.Helper;
 using MrCMS.Web.Apps.DynamicWidget.Models;
 
@@ -54,11 +57,21 @@ public class DynamicWidgetRender : IDynamicWidgetRender
 
         var treeNodeList = BuildPropertiesTree(matchCollection);
 
+        var  container = new TagBuilder("div");
+        container.AddCssClass("dynamic-widget-container");
+        
+        var row = new TagBuilder("div");
+        row.AddCssClass("row");
+
         //TODO
         //check if it can run in parallel
         foreach (var node in treeNodeList)
-            htmlContent.AppendHtml(await RenderProperties(helper, node, properties));
+            row.InnerHtml.AppendHtml(await RenderProperties(helper, node, properties));
 
+        container.InnerHtml.AppendHtml(row);
+
+        htmlContent.AppendHtml(container);
+        
         return htmlContent;
     }
 
@@ -146,20 +159,30 @@ public class DynamicWidgetRender : IDynamicWidgetRender
             properties.TryGetProperty(name, out props);
 
 
+        //Card responsive can change from here
+        var responsive = new TagBuilder("div");
+        responsive.AddCssClass("col-12");
+        
         //Table
-        var table = new TagBuilder("table");
-        table.AddCssClass("m-0 table table-bordered table-sm dynamic-table");
+        var container = new TagBuilder("div");
+        container.AddCssClass("dynamic-widget-array-container");
 
         //Add headers
-        var header = GetTableHeader(node.Children);
-        table.InnerHtml.AppendHtml(header);
+        var header = GetContainerHeader(name.BreakUpString());
+        container.InnerHtml.AppendHtml(header);
 
         //Add rows
         prefix = $"{prefix}[{name}]";
-        var rows = await GetTableRows(node.Children, props, helper, prefix);
-        table.InnerHtml.AppendHtml(rows);
+        var rows = await GetDataCards(node.Children, props, helper, prefix);
+        container.InnerHtml.AppendHtml(rows);
 
-        return table;
+
+        var addButton = GetContainerAddButton(name.BreakUpString());
+        container.InnerHtml.AppendHtml(addButton);
+
+        responsive.InnerHtml.AppendHtml(container);
+        
+        return responsive;
     }
 
     #endregion
@@ -177,13 +200,15 @@ public class DynamicWidgetRender : IDynamicWidgetRender
 
         var existingProperty = properties.GetNullableProperty(label);
         var existingValue = existingProperty?.GetString();
-        var showLabel = prefix == null;
+
+        var isArray = prefix != null;
+        
         prefix = prefix == null ? label : $"{prefix}[{label}]";
 
         var elementContainer = GetPropertyContainer();
-        var elementHtml = await GetProperty(helper, typeName, label, prefix, node.Attributes, existingValue, showLabel);
+        var elementHtml = await GetProperty(helper, typeName, label, prefix, node.Attributes, existingValue);
 
-        if (showLabel)
+        if (!isArray) //instead of using show label
         {
             var enabledValue = existingProperty.HasValue
                 ? properties.GetProperty($"{_checkboxPrefix}{prefix}").GetString()
@@ -194,16 +219,21 @@ public class DynamicWidgetRender : IDynamicWidgetRender
 
 
         elementContainer.InnerHtml.AppendHtml(elementHtml);
-        return elementContainer;
+        
+        var responsive = new TagBuilder("div");
+        responsive.AddCssClass(_renderers[typeName].ResponsiveClass);
+
+        responsive.InnerHtml.AppendHtml(elementContainer);
+        
+        return responsive;
     }
 
     private async Task<IHtmlContent> GetProperty(IHtmlHelper helper, string typeName, string label, string name,
-        AttributeItem[] attributes, string existingValue, bool showLabel)
+        AttributeItem[] attributes, string existingValue)
     {
         IHtmlContentBuilder elementHtml = new HtmlContentBuilder();
 
-        if (showLabel)
-            elementHtml.AppendHtml(GetLabel(name, label));
+        elementHtml.AppendHtml(GetLabel(name, label));
 
         var render = await _renderers[typeName].RenderAsync(helper, name, existingValue, attributes);
         elementHtml.AppendHtml(render);
@@ -252,62 +282,34 @@ public class DynamicWidgetRender : IDynamicWidgetRender
 
     #region TableHeader
 
-    private IHtmlContent GetTableHeader(List<RenderNode> nodes)
+    private IHtmlContent GetContainerHeader(string title)
     {
-        var tr = new TagBuilder("tr");
+        var header = new TagBuilder("h4");
 
-        //Adding first #
-        tr.InnerHtml.AppendHtml(GetHeaderSecondaryCol("#"));
-        tr.InnerHtml.AppendHtml(GetHeaderSecondaryCol());
+        header.AddCssClass("border-bottom pb-3 my-3");
 
-        foreach (var node in nodes)
-        {
-            var typeName = node.TypeName;
-            var name = node.Name;
+        header.InnerHtml.AppendHtml(title);
 
-            name = string.Create(name.Length, name, (chars, state) =>
-            {
-                state.AsSpan().CopyTo(chars); // No slicing to save some CPU cycles
-                chars[0] = char.ToUpper(chars[0]);
-            });
-
-            var th = new TagBuilder("th");
-
-            th.InnerHtml.Append(name.BreakUpString());
-            tr.InnerHtml.AppendHtml(th);
-        }
-
-        //Add btn
-        tr.InnerHtml.AppendHtml(GetHeaderAddButton());
-
-        return tr;
+        return header;
     }
 
-    private IHtmlContent GetHeaderSecondaryCol(string text = "")
+    private IHtmlContent GetContainerAddButton(string name)
     {
-        var thash = new TagBuilder("th");
-        thash.InnerHtml.Append(text);
-        thash.AddCssClass("table-secondary");
-        thash.Attributes.Add("width", "25");
+        var addButton = new TagBuilder("div");
+        addButton.AddCssClass("row my-3 justify-content-center");
 
-        return thash;
-    }
+        addButton.InnerHtml.AppendHtml(
+            $"<div class='col-auto'><button data-array-id='{Guid.NewGuid()}' type='button' class='btn btn-primary add-row'><i class='fa fa-plus'></i> Add item to {name}</button></div>");
 
-    private IHtmlContent GetHeaderAddButton()
-    {
-        var th = new TagBuilder("th");
-        th.InnerHtml.AppendHtml(
-            $"<button data-row-id='{Guid.NewGuid()}' type='button' class='btn btn-secondary btn-sm add-row'><i class='fa fa-plus'></i></button>");
-        th.Attributes.Add("width", "25");
-
-        return th;
+        return addButton;
     }
 
     #endregion
 
     #region TableRows
 
-    private async Task<IHtmlContentBuilder> GetTableRows(List<RenderNode> nodes, JsonElement props, IHtmlHelper helper,
+    private async Task<IHtmlContentBuilder> GetDataCards(List<RenderNode> nodes, JsonElement props,
+        IHtmlHelper helper,
         string prefix = null)
     {
         IHtmlContentBuilder bodyHtml = new HtmlContentBuilder();
@@ -321,64 +323,50 @@ public class DynamicWidgetRender : IDynamicWidgetRender
         //always add at least a row
         do
         {
-            var tr = new TagBuilder("tr");
+            var card = new TagBuilder("div");
             var nodeProps = props.ValueKind == JsonValueKind.Undefined ? new JsonElement() : props[i];
             var enabledValue = nodeProps.GetNullableProperty(_checkboxPrefix)?.GetString() ?? "true";
 
-            //Adding number col
-            tr.InnerHtml.AppendHtml(GetNumberCol(i + 1));
-            tr.InnerHtml.AppendHtml(GetEnabledCol(prefix, enabledValue));
+            card.AddCssClass("card mb-3");
 
+            card.InnerHtml.AppendHtml(GetCardHeader(prefix, enabledValue, i));
+
+            var cardBody = new TagBuilder("div");
+            cardBody.AddCssClass("card-body py-2");
+            
+            var row = new TagBuilder("div");
+            row.AddCssClass("row");
+            
             foreach (var node in nodes)
             {
-                var td = new TagBuilder("td");
-
                 var prefixName = $"{prefix}[]";
 
                 var render = await RenderProperties(helper, node, nodeProps, prefixName);
                 if (render != null)
-                    td.InnerHtml.AppendHtml(render);
-
-                tr.InnerHtml.AppendHtml(td);
+                    row.InnerHtml.AppendHtml(render);
             }
 
-            bodyHtml.AppendHtml(tr);
+            cardBody.InnerHtml.AppendHtml(row);
+            card.InnerHtml.AppendHtml(cardBody);
+
+            bodyHtml.AppendHtml(card);
             i++;
-
-
-            tr.InnerHtml.AppendHtml(GetDeleteCol());
         } while (i < existingPropsCount);
 
 
         return bodyHtml;
     }
 
-    private IHtmlContent GetNumberCol(int index)
+    private IHtmlContent GetCardHeader(string prefix, string existingValue, int index)
     {
-        var td = new TagBuilder("td");
-        td.InnerHtml.Append(index.ToString());
-        td.AddCssClass("table-secondary");
+        var header = new TagBuilder("div");
+        header.AddCssClass("card-header bg-light py-2");
 
-        return td;
-    }
-
-    private IHtmlContent GetEnabledCol(string name, string existingValue)
-    {
-        var td = new TagBuilder("td");
-        var enabledHtml = GetEnabledProperty(name, existingValue, false, true);
-        td.InnerHtml.AppendHtml(enabledHtml);
-        td.AddCssClass("table-secondary");
-
-        return td;
-    }
-
-    private IHtmlContent GetDeleteCol()
-    {
-        var td = new TagBuilder("td");
-        td.InnerHtml.AppendHtml(
-            "<button type='button' class='btn btn-danger btn-sm delete-row'><i class='fa fa-trash'></i></button>");
-
-        return td;
+        header.InnerHtml.AppendHtml(
+            $"<div class='row'><div class='col-auto p-0'>{GetEnabledProperty(prefix, existingValue, false, true).GetString()}</div><div class='col rowIndex font-weight-bold'>{(index + 1)}</div><div class='col-auto'><button type='button' class='btn btn-sm btn-danger delete-row'><i class='fa fa-trash-o'></i></button></div></div>");
+            // <div class='col-auto'><button type='button' class='btn btn-sm sort-row'><i class='fa fa-sort'></i></button></div>
+        
+        return header;
     }
 
     #endregion

@@ -43,7 +43,7 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
             size.Height = height;
 
         await using var writer = new StringWriter();
-        (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }))
+        (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }, enableLazyLoading: false))
             .WriteTo(writer, HtmlEncoder.Default);
 
         return writer.ToString();

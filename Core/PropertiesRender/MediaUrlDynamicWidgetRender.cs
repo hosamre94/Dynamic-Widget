@@ -9,6 +9,8 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class MediaUrlDynamicWidgetRender : IDynamicWidgetPropertyRender
 {
     public string Name => "mediaUrl";
+    
+    public string ResponsiveClass => "col-12";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)

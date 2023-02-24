@@ -10,6 +10,8 @@ public class MediaSelectorDynamicWidgetRender : IDynamicWidgetPropertyRender
 {
     public string Name => "media";
 
+    public string ResponsiveClass => "col-12";
+
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {

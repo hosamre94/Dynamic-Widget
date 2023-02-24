@@ -3,16 +3,22 @@
   "version": "1.0.0",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "admin-js": "wwwroot/assets/dynamic-widget-admin.js",
+  "admin-css": "wwwroot/assets/dynamic-widget-admin.css",
   "targets": {
-    "admin-js": {}
+    "admin-js": {},
+    "admin-css": {}
   },
   "scripts": {
-    "build": "npm run build:js",
+    "build": "npm run build:js && npm run build:css",
     "build:js": "npm run build:js:admin",
     "build:js:admin": "parcel build wwwroot/Area/Admin/Content/scripts/dynamic-widget-admin.js --target admin-js",
-    "watch": "concurrently --kill-others \"npm:watch:js\"",
+    "build:css": "npm run build:css:admin",
+    "build:css:admin": "parcel build wwwroot/Area/Admin/Content/styles/dynamic-widget-admin.scss --target admin-css",
+    "watch": "concurrently --kill-others \"npm:watch:js\" \"npm:watch:css\"",
     "watch:js": "concurrently \"npm:watch:js:admin\"",
-    "watch:js:admin": "parcel watch wwwroot/Area/Admin/Content/scripts/dynamic-widget-admin.js --target admin-js -p 1234"
+    "watch:js:admin": "parcel watch wwwroot/Area/Admin/Content/scripts/dynamic-widget-admin.js --target admin-js -p 1234",
+    "watch:css": "concurrently \"npm:watch:css:admin\"",
+    "watch:css:admin": "parcel watch wwwroot/Area/Admin/Content/styles/dynamic-widget-admin.scss --target admin-css -p 1236"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.6.0",

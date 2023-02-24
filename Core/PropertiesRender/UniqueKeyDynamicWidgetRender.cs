@@ -9,6 +9,8 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class UniqueKeyDynamicWidgetRender : IDynamicWidgetPropertyRender
 {
     public string Name => "uniqueKey";
+    
+    public string ResponsiveClass => "col-12 d-none";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)

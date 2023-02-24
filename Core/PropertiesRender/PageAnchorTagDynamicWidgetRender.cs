@@ -25,6 +25,8 @@ public class PageAnchorTagDynamicWidgetRender : IDynamicWidgetPropertyRender
     }
 
     public string Name => "pageAnchorTag";
+    
+    public string ResponsiveClass => "col-md-6 col-lg-4 col-xl-3";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)

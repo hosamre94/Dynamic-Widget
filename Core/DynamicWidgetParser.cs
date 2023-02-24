@@ -157,13 +157,14 @@ public class DynamicWidgetParser : IDynamicWidgetParser
         var _props = props[name];
         if (!(_props is JArray _array))
             return string.Empty;
-
-        if (props.Value<string>(_checkboxPrefix) == "false")
-            return string.Empty;
+        
 
         var sb = new StringBuilder(_array.Count);
         foreach (var item in _array)
+        {
+            if (item.Value<string>(_checkboxPrefix) != "false")
             sb.Append(await ParseShortcodes(helper, node.Children, item));
+        }
 
         return sb.ToString();
     }
