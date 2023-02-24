@@ -5,9 +5,9 @@ using MrCMS.Web.Apps.DynamicWidget.Models;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Core;
 
-public class TextBoxDynamicWidgetParser : IDynamicWidgetPropertyParser
+public class SelectDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
-    public string Name => "text";
+    public string Name => "select";
 
     public Task<string> ParseAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
