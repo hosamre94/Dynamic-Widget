@@ -55,7 +55,7 @@ public class SelectDynamicWidgetRender : IDynamicWidgetPropertyRender
         };
 
 
-        tagBuilder.AddCssClass("form-select");
+        tagBuilder.AddCssClass("form-control");
 
         foreach (var value in values)
         {
