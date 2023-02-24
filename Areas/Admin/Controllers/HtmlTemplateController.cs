@@ -37,7 +37,7 @@ public class HtmlTemplateController : MrCMSAppAdminController<DynamicWidgetApp>
         if (!await _htmlTemplateAdminService.IsUniqueName(addHtmlTemplateModel.Name, null))
         {
             ModelState.AddModelError(string.Empty,$"{addHtmlTemplateModel.Name} already registered.");
-            View(addHtmlTemplateModel);
+            return View(addHtmlTemplateModel);
         }
         
         await _htmlTemplateAdminService.AddAsync(addHtmlTemplateModel);
@@ -60,7 +60,7 @@ public class HtmlTemplateController : MrCMSAppAdminController<DynamicWidgetApp>
         if (!await _htmlTemplateAdminService.IsUniqueName(model.Name, model.Id))
         {
             ModelState.AddModelError(string.Empty,$"{model.Name} already registered.");
-            View(model);
+            return View(model);
         }
         
         await _htmlTemplateAdminService.UpdateAsync(model);
