@@ -8,6 +8,8 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class TextBoxDynamicWidgetRender : IDynamicWidgetPropertyRender
 {
     public string Name => "text";
+    
+    public string ResponsiveClass => "col-md-6 col-lg-4 col-xl-3";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)

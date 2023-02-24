@@ -1,0 +1,13 @@
+﻿@using MrCMS.Services
+@using MrCMS.Web.Apps.DynamicWidget.Helper
+@using MrCMS.Web.Apps.DynamicWidget.Widgets
+@inject IWidgetUIService WidgetUIService
+@model MrCMS.Website.WidgetData
+@{
+    var widget = await WidgetUIService.GetWidgetAsync<TemplateWidget>(Model.Id);
+}
+
+@if (widget.HtmlTemplate != null)
+{
+    @await Html.RenderDynamicContent(x => widget.HtmlTemplate.Text, x => widget.Properties)
+}

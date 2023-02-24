@@ -1,0 +1,13 @@
+﻿@using MrCMS.Web.Apps.DynamicWidget.Helper
+@using MrCMS.Web.Apps.DynamicWidget.Services
+@model MrCMS.Web.Apps.DynamicWidget.Entities.ContentBlocks.TemplateContentBlock
+@inject IGetHtmlTemplateService GetHtmlTemplateService
+
+@if (Model.Template != null)
+{
+    var template = await GetHtmlTemplateService.Get(Model.Template.TemplateId);
+    if (template != null)
+    {
+        @await Html.RenderDynamicContent(x => template.Text, x => x.Template.Properties);
+    }
+}

@@ -1,7 +1,7 @@
 import {setupWebpageUrlSelector} from "./webpage-url-selector";
 
 let _isFirstTime;
-let _cachedRows = {};
+let _cachedTemplates = {};
 
 export function initiateDynamicWidget(){
     _isFirstTime = true;
@@ -11,7 +11,7 @@ export function initiateDynamicWidget(){
 }
 
 function formSubmit() {
-    $('table.dynamic-table').closest('form').on('submit', function () {
+    $('[data-dynamic-input]').closest('form').on('submit', function () {
         let $form = $('<form>');
         $('[data-dynamic-input]').map((x, el) => {
             $('<input>').attr({
@@ -33,24 +33,29 @@ function formSubmit() {
 }
 
 function refreshUI() {
-    $(".dynamic-table .add-row").each(function (i) {
+    $(".dynamic-widget-array-container .add-row").each(function (i) {
+        let arrayContainer = $(this).closest('.dynamic-widget-array-container');
+        
         if (_isFirstTime) {
-            const _row = $(this).closest('table').children('tbody').children('tr:nth-child(2)').clone();
-            const _rowId = $(this).data('row-id');
+            const _cardTemplate = $(arrayContainer.children('.card')[0]).clone();
+            const _arrayId = $(this).data('array-id');
+            
+            _cardTemplate.find('.media-selector-initialized').each(function(index){
+                let $media = $(this);
+                $media.off();
+                $media.removeClass('media-selector-initialized');
+                $media.attr('id', `m_temp_${index}`)
+                $media.closest('.form-group').html($media);
+            });
 
-            const _media = _row.find('.media-selector-initialized');
-            _media.off();
-            _media.removeClass('media-selector-initialized');
-            _media.attr('id', 'm_temp')
-            _media.closest('.form-group').html(_media);
-            _row.find('input,select').val('');
-            _cachedRows[_rowId] = _row;
+            _cardTemplate.find('input,select').val('');
+            _cachedTemplates[_arrayId] = _cardTemplate;
         }
 
         //To make sure the event is not duplicated and we have a backup row if all rows are deleted
         $(this).off().click(function () {
-            const _clone = _cachedRows[$(this).data('row-id')].clone();
-            const _size = $(this).closest('table').children('tbody').children('tr').length;
+            const _clone = _cachedTemplates[$(this).data('array-id')].clone();
+            const _size = $(this).closest('.dynamic-widget-array-container').children('.card').length;
 
             _clone.find('[data-dynamic-input]').each(function (){
                 $(this).attr('id', $(this).attr('id') + '_' + _size )
@@ -66,21 +71,43 @@ function refreshUI() {
                 })
             }
             _clone.find('[data-type=media-selector], [class=media-selector]').mediaSelector();
-            _clone.find('td:first').html(_size);
-            $(this).closest('table').append(_clone);
+            _clone.find('.rowIndex').html(_size + 1);
+            $(this).closest('.dynamic-widget-array-container').children(':last-child').before(_clone);
             setupWebpageUrlSelector();
             refreshUI();
-        })
-    })
+        });
+    });
 
-    $(".dynamic-table .delete-row").off().click(function () {
+    $(".dynamic-widget-array-container .delete-row").off().click(function () {
         const didConfirm = confirm("Are you sure You want to delete");
         if (didConfirm === true) {
-            $(this).closest('tr').remove();
+            $(this).closest('.card').remove();
+            resetArrayIndexes();
         }
     });
 
+    $(".dynamic-widget-array-container").each((_, element) => {
+        const $element = $(element);
+        $element.sortable({
+            // handle: ".sort-row",
+            items: "> .card",
+            update: function (event, ui) {
+                resetArrayIndexes();
+            }
+        });
+    });
     _isFirstTime = false;
+}
+
+function resetArrayIndexes(){
+    $('.dynamic-widget-array-container').each(function(){
+       let arrayParent= $(this);
+       let index = 0;
+       arrayParent.children('.card').each(function (){
+          let cardItem = $(this);
+          cardItem.find('.rowIndex').html(++index);
+       });
+    });
 }
 
 function dragAndDrop() {
