@@ -1,0 +1,30 @@
+﻿@model MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models.UpdateHtmlTemplateModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutPopup.cshtml";
+}
+<form method="post" asp-controller="HtmlTemplate" asp-action="Edit">
+    @Html.HiddenFor(f=>f.Id)
+    <fieldset>
+        <legend>
+            Edit Html Template
+            <span class="btn-group d-inline pull-right">
+                <button type="submit" class="btn-primary btn">
+                    Save
+                </button>
+                <a asp-action="Index" asp-controller="HtmlTemplate" class="btn btn-default">Back</a>
+            </span>
+        </legend>
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name"></span>
+        </div>
+
+        @{ await Html.RenderPartialAsync("_DynamicWidgetDragHelper"); }
+
+        <div class="form-group mt-3">
+            @Html.LabelFor(m => m.Text)
+            @Html.TextAreaFor(m => m.Text, new { @class = "code-enabled" })
+        </div>
+    </fieldset>
+</form>

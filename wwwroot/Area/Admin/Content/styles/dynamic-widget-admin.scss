@@ -1,0 +1,29 @@
+﻿.content-admin {
+  .main {
+    .right-nav {
+      &:not(.expand){
+        .dynamic-widget-container{
+          & > .row{
+            & > *{
+              max-width: 100% !important;
+              flex: 0 0 100% !important;
+            }
+          }
+          .dynamic-widget-array-container{
+            .card{
+              & > .card-body{
+                padding: .5rem !important;
+                & > .row{
+                  & > *{
+                    max-width: 100% !important;
+                    flex: 0 0 100% !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

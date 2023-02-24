@@ -1,0 +1,10 @@
+@using MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models.Content
+@using MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Services
+@model UpdateTemplateContentBlockModel
+@inject IGetHtmlTemplateOptions GetHtmlTemplateOptions
+
+
+<div class="form-group">
+    @Html.LabelFor(m => m.TemplateId)
+    @Html.DropDownListFor(m => m.TemplateId, await GetHtmlTemplateOptions.GetOptions(emptyItemText: await Html.Resource("Select a template...")), new { @class = "form-control" })
+</div>

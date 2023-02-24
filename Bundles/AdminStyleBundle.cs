@@ -13,7 +13,7 @@ public class AdminStyleBundle : IAdminStyleBundle
         return Task.FromResult(true);
     }
 
-    public string Url => "/assets/admin/dynamic-widget-style.css";
+    public string Url => "/Apps/DynamicWidgets/assets/dynamic-widget-admin.css";
 
     public IEnumerable<string> VendorFiles
     {

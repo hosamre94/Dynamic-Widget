@@ -1,0 +1,4 @@
+@using MrCMS.Web.Apps.DynamicWidget.Helper
+@model MrCMS.Web.Apps.DynamicWidget.Areas.Admin.Models.Content.UpdateSettingsBlockModel
+
+@await Html.RenderAdminProperties(x => x.Text, x => x.Properties)

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MrCMS.Entities.Documents.Web;
 using MrCMS.Services;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MrCMS.Helpers;
 using MrCMS.Web.Apps.DynamicWidget.Models;
 using NHibernate;
 using NHibernate.Linq;
@@ -22,15 +24,21 @@ public class PageUrlDynamicWidgetRender : IDynamicWidgetPropertyRender
     }
 
     public string Name => "pageUrl";
+    
+    public string ResponsiveClass => "col-md-6 col-lg-4 col-xl-3";
 
     public async Task<IHtmlContent> RenderAsync(IHtmlHelper helper, string name, string existingValue,
         AttributeItem[] attributes = null)
     {
+
+        var elementId =TagBuilder.CreateSanitizedId(name, "-").GetTidyFileName();
+        elementId = $"{elementId}-{(new Random()).NextInt64(long.MinValue, long.MaxValue)}";
+        
         var tagBuilder = new TagBuilder("select")
         {
             Attributes =
             {
-                ["id"] = TagBuilder.CreateSanitizedId(name, "-"),
+                ["id"] = elementId,
                 ["name"] = name,
                 ["data-webpage-url-selector"] = null,
                 ["data-dynamic-input"] = null

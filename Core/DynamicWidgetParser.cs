@@ -44,13 +44,15 @@ public class DynamicWidgetParser : IDynamicWidgetParser
     {
         using (MiniProfiler.Current.Step("DynamicWidget"))
         {
+            
+            var matches = string.IsNullOrWhiteSpace(text) ? Array.Empty<string>() : ShortcodeSplitMatcher.Split(text);
+            var tree = BuildPropertiesTree(matches, false);
+            
             if (string.IsNullOrEmpty(props))
-                return new HtmlString(text);
+                return new HtmlString(await ClearShortCodes(helper, tree));
 
             var properties = JToken.Parse(props);
-            var matches = ShortcodeSplitMatcher.Split(text);
 
-            var tree = BuildPropertiesTree(matches, false);
             var result = await ParseShortcodes(helper, tree, properties);
             return new HtmlString(result);
         }
@@ -117,6 +119,17 @@ public class DynamicWidgetParser : IDynamicWidgetParser
 
     #region Parsing
 
+    private async Task<string> ClearShortCodes(IHtmlHelper helper, List<ParseNode> tree)
+    {
+        var stb = new StringBuilder();
+        foreach (var node in tree.Where(node => node.Text != null))
+        {
+            stb.Append(node.Text);
+        }
+
+        return stb.ToString();
+    }
+
     private async Task<string> ParseShortcodes(IHtmlHelper helper, List<ParseNode> tree, JToken properties)
     {
         var stb = new StringBuilder();
@@ -144,13 +157,14 @@ public class DynamicWidgetParser : IDynamicWidgetParser
         var _props = props[name];
         if (!(_props is JArray _array))
             return string.Empty;
-
-        if (props.Value<string>(_checkboxPrefix) == "false")
-            return string.Empty;
+        
 
         var sb = new StringBuilder(_array.Count);
         foreach (var item in _array)
+        {
+            if (item.Value<string>(_checkboxPrefix) != "false")
             sb.Append(await ParseShortcodes(helper, node.Children, item));
+        }
 
         return sb.ToString();
     }
