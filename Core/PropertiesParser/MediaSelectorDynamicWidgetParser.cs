@@ -16,6 +16,7 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
         AttributeItem[] attributes = null)
     {
         var classes = (string)null;
+        var alt = (string)null;
         var width = 0;
         var height = 0;
         if (attributes != null)
@@ -32,6 +33,9 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
                     case "class":
                         classes = attr.Value;
                         break;
+                    case "alt":
+                        alt = attr.Value;
+                        break;
                 }
             }
 
@@ -43,7 +47,8 @@ public class MediaSelectorDynamicWidgetParser : IDynamicWidgetPropertyParser
             size.Height = height;
 
         await using var writer = new StringWriter();
-        (await helper.RenderImage(existingValue, size, attributes: new { @class = classes }, enableLazyLoading: false))
+        (await helper.RenderImage(existingValue, size, alt, attributes: new { @class = classes },
+                enableLazyLoading: false))
             .WriteTo(writer, HtmlEncoder.Default);
 
         return writer.ToString();

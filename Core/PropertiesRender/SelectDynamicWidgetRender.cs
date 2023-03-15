@@ -42,8 +42,7 @@ public class SelectDynamicWidgetRender : IDynamicWidgetPropertyRender
                     break;
             }
         }
-
-
+        
         var tagBuilder = new TagBuilder("select")
         {
             Attributes =
@@ -53,8 +52,7 @@ public class SelectDynamicWidgetRender : IDynamicWidgetPropertyRender
                 ["data-dynamic-input"] = null
             }
         };
-
-
+        
         tagBuilder.AddCssClass("form-control");
 
         foreach (var value in values)
