@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MrCMS.Web.Apps.DynamicWidget.Models;
+using MrCMS.Helpers;
 
 namespace MrCMS.Web.Apps.DynamicWidget.Core;
 
@@ -42,7 +43,7 @@ public class SelectDynamicWidgetRender : IDynamicWidgetPropertyRender
                     break;
             }
         }
-        
+
         var tagBuilder = new TagBuilder("select")
         {
             Attributes =
@@ -52,25 +53,32 @@ public class SelectDynamicWidgetRender : IDynamicWidgetPropertyRender
                 ["data-dynamic-input"] = null
             }
         };
-        
+
         tagBuilder.AddCssClass("form-control");
 
         foreach (var value in values)
         {
+            var tempValue = value;
+            var text = value.ToString();
+            if (value.Contains("|"))
+            {
+                tempValue = value.Split('|')[0];
+                text = value.Split('|')[1];
+            }
             var option = new TagBuilder("option")
             {
                 Attributes =
                 {
-                    [value] = value
+                    ["value"] = tempValue
                 }
             };
 
-            if (value == existingValue)
+            if (tempValue == existingValue)
             {
                 option.Attributes.Add("selected", "selected");
             }
 
-            option.InnerHtml.Append(value);
+            option.InnerHtml.Append(text.BreakUpString());
 
             tagBuilder.InnerHtml.AppendHtml(option);
         }
