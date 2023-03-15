@@ -11,11 +11,13 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class PageAnchorTagDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
     private readonly IWebpageUIService _webpageUiService;
+    private readonly IGetHomePage _getHomePage;
 
 
-    public PageAnchorTagDynamicWidgetParser(IWebpageUIService webpageUiService)
+    public PageAnchorTagDynamicWidgetParser(IWebpageUIService webpageUiService, IGetHomePage getHomePage)
     {
         _webpageUiService = webpageUiService;
+        _getHomePage = getHomePage;
     }
 
     public string Name => "pageAnchorTag";
@@ -27,8 +29,12 @@ public class PageAnchorTagDynamicWidgetParser : IDynamicWidgetPropertyParser
         {
             var page  = await _webpageUiService.GetPage<Webpage>(pageId);
             
+            var homePage= await _getHomePage.Get();
+            
             var anchorTag = new TagBuilder("a");
-            anchorTag.Attributes.Add("href",$"/{page?.UrlSegment}");
+
+            anchorTag.Attributes.Add("href", homePage?.Id == page.Id ? "/" : $"/{page?.UrlSegment}");
+
             anchorTag.InnerHtml.Append(page?.Name ?? string.Empty);
 
             if (attributes != null)

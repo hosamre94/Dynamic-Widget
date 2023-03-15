@@ -9,11 +9,13 @@ namespace MrCMS.Web.Apps.DynamicWidget.Core;
 public class PageUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
 {
     private readonly IWebpageUIService _webpageUiService;
+    private readonly IGetHomePage _getHomePage;
 
 
-    public PageUrlDynamicWidgetParser(IWebpageUIService webpageUiService)
+    public PageUrlDynamicWidgetParser(IWebpageUIService webpageUiService, IGetHomePage getHomePage)
     {
         _webpageUiService = webpageUiService;
+        _getHomePage = getHomePage;
     }
 
     public string Name => "pageUrl";
@@ -24,7 +26,9 @@ public class PageUrlDynamicWidgetParser : IDynamicWidgetPropertyParser
         if (int.TryParse(existingValue, out var pageId))
         {
             var page  = await _webpageUiService.GetPage<Webpage>(pageId);
-            return $"/{page?.UrlSegment}";
+            var homePage= await _getHomePage.Get();
+            
+            return homePage?.Id == page?.Id ? "/" : $"/{page?.UrlSegment}";
         }
         
         return existingValue;
