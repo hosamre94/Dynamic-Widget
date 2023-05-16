@@ -6,7 +6,7 @@
             url: "/Admin/Webpage/Select2Search",
             data: function (params) {
                 return {
-                    search: params.term,
+                    term: params.term,
                     page: params.page || 1
                 };
             },
